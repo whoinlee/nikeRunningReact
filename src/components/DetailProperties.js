@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import _ from 'lodash'
+import '../stylesheets/detailProperties.scss'
 
 
 class DetailProperties extends Component {

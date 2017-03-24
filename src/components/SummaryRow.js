@@ -11,13 +11,13 @@ export const SummaryRow = ({run, callBack}) => {
   		id=run['activityId']
 
 	const onRowClicked = (e) => {
-		console.log("INFO SummaryRow :: onRowClicked, id is " + id)
+		// console.log("INFO SummaryRow :: onRowClicked, id is " + id)
 		e.preventDefault()
 		callBack(id)
 	}
 
 	return (
-		<tr onClick={onRowClicked} >
+		<tr onClick={onRowClicked}>
 			<td>{time}</td>
 			<td>{duration}</td>
 			<td>{distance}</td>
@@ -28,7 +28,7 @@ export const SummaryRow = ({run, callBack}) => {
 
 SummaryRow.propTypes = {
 	run: React.PropTypes.object.isRequired,
-	callBack: React.PropTypes.func
+	callBack: React.PropTypes.func.isRequired
 }
 
 export default SummaryRow

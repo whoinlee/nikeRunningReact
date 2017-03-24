@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Map, Polyline, TileLayer } from 'react-leaflet'
-import '../stylesheets/details.scss'
+import '../stylesheets/detailMap.scss'
 
 
 class DetailMap extends Component {
@@ -14,6 +14,11 @@ class DetailMap extends Component {
 	    	initZoomLevel: 14,
 	    	currentZoomLevel: 14
 	    }
+	}
+
+	componentWillUnmount() {
+		console.log('INFO DetailMap :: componentWillUnmount ever?????')
+		this.leafletMap = null
 	}
 
 	componentDidMount() {
@@ -34,20 +39,22 @@ class DetailMap extends Component {
         });*/
 	}
 
-	componentWillUnmount() {
-		console.log('INFO DetailMap :: componentWillUnmount ever?????')
-		this.leafletMap = null
-	}
-
 	render() {
 		const { points, maxZoomLevel, initZoomLevel } = this.state
 		const centerIndex = Math.floor(points.length/2)
 		return (
 			<div id="map">
-				<Map maxZoom={maxZoomLevel} zoom={initZoomLevel} center={points[centerIndex]} ref={m => { this.leafletMap = m; }}>
-					<Polyline color='#1788cc' positions={points} />
-					<TileLayer 	attribution='Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
-								url='http://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}' />
+				<Map 	
+				  	maxZoom={maxZoomLevel} 
+				  	zoom={initZoomLevel} 
+				  	center={points[centerIndex]} 
+				  	ref={m => { this.leafletMap = m; }}>
+					<Polyline 	
+						color='#1788cc' 
+						positions={points} />
+					<TileLayer 	
+						attribution='Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ'
+						url='http://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}' />
                 </Map>
 			</div>
 		)

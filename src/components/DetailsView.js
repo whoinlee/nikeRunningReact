@@ -14,17 +14,15 @@ class DetailsView extends Component {
 
 	componentWillUnmount() {
 		console.log('INFO DetailsView :: componentWillUnmount ever?????')
-		if (this.detailsView) this.detailsView = null
+		if (this.viewContainer) this.viewContainer = null
 	}
 
 	render() {
 		return (
-			<div className='detailsView' ref={container => { this.detailsView = container; }}>
+			<div className="detailsView" ref={(ref) => { this.viewContainer = ref; }}>
 				<button onClick={this.props.callBack}>Back</button>
-				<DetailMap model={this.props.run}/>
-				<DetailCharts model={this.props.run}/>
-
-				
+				<DetailMap model={this.props.run} />
+				<DetailCharts model={this.props.run} />
 				<button onClick={this.props.callBack}>Back</button>
 			</div>
 		)
@@ -36,7 +34,7 @@ class DetailsView extends Component {
 DetailsView.propTypes = {
 	run: React.PropTypes.object.isRequired,
 	id: React.PropTypes.string.isRequired,
-	callBack: React.PropTypes.func
+	callBack: React.PropTypes.func.isRequired
 }
 
 export default DetailsView

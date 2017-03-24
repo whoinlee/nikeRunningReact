@@ -16,7 +16,7 @@ class SummaryView extends Component {
 	}
 
 	hideSummaryView(id) {
-		console.log("INFO SummaryView :: hideSummaryView, id is " + id)
+		// console.log("INFO SummaryView :: hideSummaryView, id is " + id)
 		this.setState({hide:true})
 		this.props.callBack(id)
 	}
@@ -24,7 +24,7 @@ class SummaryView extends Component {
 	render() {
 		const { runs, hide } = this.state
 	  	return (
-		  	<div className='summaryView' style={hide ? { display: 'none' } : {}} >
+		  	<div className="summaryView" style={hide ? { display: 'none' } : {}} >
 				<table>
 					<thead>
 						<tr>
@@ -35,7 +35,7 @@ class SummaryView extends Component {
 						</tr>
 					</thead>
 					<tbody>
-						{runs.map( (run, i) => <SummaryRow key={i} run={run} callBack={this.hideSummaryView}/> )}
+						{runs.map( (run, i) => <SummaryRow key={i} run={run} callBack={this.hideSummaryView} /> )}
 					</tbody>
 				</table>
 			</div>
@@ -44,16 +44,9 @@ class SummaryView extends Component {
 }  
 
 SummaryView.propTypes = {
-	runs: function(props) {
-		if (!Array.isArray(props.runs)) {
-			return new Error("summary data should be an array")
-		// } else if(!props.runs.length) {
-		// 	return new Error("There should be at least one record")
-		} else {
-			return null
-		}
-	},
-	callBack: React.PropTypes.func
+	runs: (props) => (	(!Array.isArray(props.runs)) ?
+						Error("summary data should be an array") : null	),
+	callBack: React.PropTypes.func.isRequired
 }
 
 export default SummaryView

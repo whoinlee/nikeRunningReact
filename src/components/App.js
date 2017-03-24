@@ -37,9 +37,8 @@ class App extends Component {
 
   showDetailView(id) {
     console.log("INFO App :: showDetailView, id is " + id)
-    //-- CHECK!!! this.props.location.pathname = "/runs/" + id ----> routing, how?
+    //-- CHECK: this.props.location.pathname = "/runs/" + id ----> routing, how?
     let run = this.getSelectedObj(id)
-    // console.log("INFO App :: showDetailView, run.activityId is " + run.activityId)
     this.setState({showDetail:true, selectedID:id, selectedObj:run})
   }
 
@@ -58,11 +57,10 @@ class App extends Component {
             <h2>A Sample Data Visualization w. Nike+ API data built in React</h2>
           </div>
           {(!loading && (runs.length > 0) && !showDetail) ?
-            <SummaryView runs={runs} callBack={this.showDetailView}/> : 
-            (showDetail) ?
-              <DetailsView run={selectedObj} id={selectedID} callBack={this.showSummaryView}/> :
-              <span>...loading</span>
-          }
+              <SummaryView runs={runs} callBack={this.showDetailView}/> : 
+              (showDetail) ?
+                <DetailsView run={selectedObj} id={selectedID} callBack={this.showSummaryView}/> :
+                <span>...loading</span>}
         </div>
       )
   }
