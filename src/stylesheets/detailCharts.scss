@@ -1,7 +1,15 @@
 /*DetailsView - DetailCharts*/
+
+#charts {
+    width: 800px;
+    margin: 75px auto;
+    margin-bottom: 0px;
+}
+
 .charts-wrapper {
     position: relative;
     height: 400px;
+    // margin: auto;
 }
 .charts-marker {
     position: absolute;
@@ -37,7 +45,6 @@
     padding: 2px 0 2px 0;
     font-size: 15px;
     line-height: 15px;
-/*    border: 1px solid;*/
 }
 .charts-legend p:first-child {
     padding-top: 14px;

@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import _ from 'underscore'
-import $ from 'jquery'
 import '../stylesheets/detailCharts.scss'
-
 
 class DetailCharts extends Component {
 
@@ -20,7 +18,9 @@ class DetailCharts extends Component {
 	    	options: {},
 	    	paceLegend: {},
 	    	heartrateLegend: {},
-	    	elevationLegend: {}
+	    	elevationLegend: {},
+            hover: false,
+            markerStyle: {top: '0px', left: '0px'}
 	    }
 	    this.calculateMetrics = this.calculateMetrics.bind(this)
 	    this.renderPaceChart = this.renderPaceChart.bind(this)
@@ -32,7 +32,6 @@ class DetailCharts extends Component {
 
 	componentDidMount() {
 		// console.log('INFO DetailCharts :: componentDidMount')
-
 		this.calculateMetrics()
 		this.renderPaceChart()
 		this.renderHeartRateChart()
@@ -42,8 +41,8 @@ class DetailCharts extends Component {
 	}
 
 	calculateMetrics() {
-		// console.log('INFO DetailCharts :: calculateMetrics')
-
+        // console.log('INFO DetailCharts :: calculateMetrics')
+		// console.log('INFO DetailCharts :: defaultValueStyle is ' + defaultValueStyle)  
 		if (this.state.run['metrics']) {
 			//-- an array of objects
 			const metrics = this.state.run['metrics']
@@ -53,14 +52,12 @@ class DetailCharts extends Component {
 			let dist = metrics.find((metric) => (metric.metricType.toUpperCase() === 'DISTANCE'))
 			dist = dist && (dist.values).map((value) => (parseFloat(value) * 0.621371))  //convert to miles
 			this.state.dist = dist
-			// console.log('INFO DetailCharts :: dist.length is ' + dist.length)
 
 
 			//-- time :: an array of time intervals with step 10
 			const interval = parseInt(metrics[0].intervalMetric, 10)			//radix:10, i.e. decimal number
             let time = _.range(0, interval*metrics[0].values.length, interval) 	//array, (start, stop, step)
             this.state.time = time
-            // console.log('INFO DetailCharts :: calculateMetrics, time.length is ' + time.length)
 
 
             //-- timeTicks :: an array of tick marks on the x-axis w. max 8 marks
@@ -75,7 +72,6 @@ class DetailCharts extends Component {
                 [t, t/60 + ':00'] :
                 [t, Math.floor(t/3600) + ':' + ((t%3600)/60 + '').padStart(2, '0') + ':00']))
             this.state.timeTicks = timeTicks
-            // console.log('INFO DetailCharts :: timeTicks.length is ' + timeTicks.length)
             
 
             //-- pace :: an array of pace calculated w. time and distance
@@ -85,8 +81,7 @@ class DetailCharts extends Component {
                     interval / (60* (dist[idx] - dist[idx-1]))
                 ))
             pace = pace && pace.map((pt) => ( ((pt > 4) && (pt < 20)) ? pt : null ))	//eliminate any outliers
-            this.state.pace = pace
-            // console.log('INFO DetailCharts :: calculateMetrics, pace.length is ' + pace.length)
+            if (pace) this.state.pace = pace
 
 
             //-- heartrate :: an array of heartrate   
@@ -94,13 +89,10 @@ class DetailCharts extends Component {
              * It's also subject to dropouts where there is no value recorded. We'll filter those out of our data.*/
             let heartrate = metrics.find((metric) => (metric.metricType.toUpperCase() === 'HEARTRATE'))
             heartrate = heartrate && (heartrate.values).map((value, idx) => (parseInt(value,10) || null))
-            this.state.heartrate = heartrate
+            if (heartrate) this.state.heartrate = heartrate
 
-            /*
-             * Elevation will be available only if there is GPS data. If
-             * it's there, let's grab it and convert meters to feet while
-             * we're at it.
-             */
+            
+            /*Elevation will be available only if there is GPS data. */
             const gps = this.state.run['gps']
             let elevation = gps && gps.waypoints &&
                             _(gps.waypoints)
@@ -109,11 +101,8 @@ class DetailCharts extends Component {
                                 .map((pt) => 3.28084*parseFloat(pt))	//convert to feet
                                 .value()
 
-            // console.log('INFO DetailCharts :: elevation is ' + elevation)
-            // console.log('INFO DetailCharts :: calculateMetrics, elevation.length is ' + elevation.length)
-
-            /*
-             * At least right now, there's a bit of a bug in Nike's
+            
+            /* At least right now, there's a bit of a bug in Nike's
              * response for GPS data. It claims that the measurements
              * are on the same time scale as the other metrics (every
              * 10 seconds), but, in fact, the GPS measurements are
@@ -123,24 +112,19 @@ class DetailCharts extends Component {
              * same time scale as all the others. Doing that will give
              * us the additional benefit of averaging the GPS elevation
              * data; averaging is useful here because GPS elevation
-             * measurements aren't generally very accurate.
-             */
-
+             * measurements aren't generally very accurate.  */
             const gpsRatio = elevation && (elevation.length / time.length);
             elevation = elevation && _(time).map((pt, idx) => {
-                /*
-                 * Create an array that specifies the elevation points
-                 * we're going to average for this value.
-                 */
+                
+                /* Create an array that specifies the elevation points
+                 * we're going to average for this value. */
                 let range = _.range( Math.round(Math.max(gpsRatio*idx-gpsRatio/2, 0)),
                     				 Math.round(Math.min(gpsRatio*idx+gpsRatio/2, elevation.length)) )
-                /*
-                 * Return the average of the selected points.
-                 */
+                
+                /* Return the average of the selected points. */
                 return _(range).reduce((avg,idx,cnt) => ((avg*cnt + elevation[idx]) / (cnt+1)), 0)
             })
-            // this.setState({elevation: elevation})
-            this.state.elevation = elevation
+            if (elevation) this.state.elevation = elevation
 		}//if
 
 		let options = {
@@ -150,7 +134,6 @@ class DetailCharts extends Component {
                 yaxis:  {show: false},
                 grid:   {show: true, borderWidth: 0, borderColor: null, margin: 0, labelMargin: 0, axisMargin: 0, minBorderMargin: 0, hoverable: true, autoHighlight: false},
         }
-        // this.setState({options: options})
         this.state.options = options
 	}
 
@@ -159,12 +142,11 @@ class DetailCharts extends Component {
         const time = this.state.time
         const options = this.state.options
 
-		let plot = {},
-		 	chartDiv = this.chartDiv,
-		 	chartPace = this.chartPace
-
 		if (pace.length > 0) {
-            plot.placeholder = chartPace
+            let plot = {}
+            plot.placeholder = this.chartPace
+            plot.valueHolder = this.paceValue
+            plot.valueStyle = {position: 'absolute', top: '0px', left: '0px', display: 'none', zIndex: 1, fontSize: '11px', color: 'black'}
             plot.data = _.zip(time, pace)
             plot.options = _({}).extend(options, {
                 yaxis:  {show: false, min: 0, max: 1.2*Math.max.apply(null, pace)},
@@ -176,6 +158,7 @@ class DetailCharts extends Component {
                 	'' : 
                 	Math.floor(val)  + ':' + (Math.round((val % Math.floor(val))*60) + '').padStart(2, '0') + ''
             ))
+
             this.state.plots.push(plot)
             
             //-- legend
@@ -197,12 +180,11 @@ class DetailCharts extends Component {
         const time = this.state.time
         const options = this.state.options
 
-        let plot = {},
-            chartDiv = this.chartDiv,
-            chartHeartrate = this.chartHeartrate
-
         if (heartrate.length > 0) {
-            plot.placeholder = chartHeartrate
+            let plot = {}
+            plot.placeholder = this.chartHeartrate
+            plot.valueHolder = this.heartrateValue
+            plot.valueStyle = {position: 'absolute', top: '100px', left: '0px', display: 'none', zIndex: 1, fontSize: '11px', color: 'black'}
             plot.data = _.zip(time, heartrate);
             plot.options = _({}).extend(options, {
                 yaxis:  {show: false, min: 0, max: 1.2*Math.max.apply(null, heartrate)},
@@ -234,12 +216,11 @@ class DetailCharts extends Component {
         const time = this.state.time
         const options = this.state.options
 
-        let plot = {},
-            chartDiv = this.chartDiv,
-            chartElevation = this.chartElevation
-
         if (elevation.length > 0) {
-            plot.placeholder = chartElevation
+            let plot = {}
+            plot.placeholder = this.chartElevation
+            plot.valueHolder = this.elevationValue
+            plot.valueStyle = {position: 'absolute', top: '200px', left: '0px', display: 'none', zIndex: 1, fontSize: '11px', color: 'black'}
             plot.data = _.zip(time, elevation)
 
             let min, max, mean, range
@@ -272,13 +253,17 @@ class DetailCharts extends Component {
 
     renderTickChart() {
         const timeTicks = this.state.timeTicks
+        const time = this.state.time
         const options = this.state.options
 
-        let plot = {},
-            chartDiv = this.chartDiv,
-            chartTick = this.chartTick
-
-        plot.placeholder = chartTick
+        let plot = {}
+        plot.placeholder = this.chartTick
+        plot.valueHolder = this.tickValue
+        // let topLoc = 0
+        // if (this.state.pace.length > 0) topLoc += 100
+        // if (this.state.heartrate.length > 0) topLoc += 100
+        // if (this.state.elevation.length > 0) topLoc += 100
+        plot.valueStyle = {position: 'absolute', top: '300px', left: '0px', display: 'none', zIndex: 1, fontSize: '11px', color: 'black'}
         plot.data = _(time).map((t) => ([t, null]))
         plot.options = _({}).extend(options, {
             xaxis:  {
@@ -296,104 +281,117 @@ class DetailCharts extends Component {
         this.state.plots.push(plot)
     }
 
-    drawGraphcs() {
-        /*
-         * Iterate through all the plots we created and draw them.
-         */
-         
-        // _(this.plots).each(function(plot) {
-        //     /* call the flot library to draw the graph */
-        //     plot.plot = $.plot(plot.placeholder, [plot.data], plot.options);
-        //     /* also create a moving legend to show a value */
-        //     plot.value = $('<div>').css({
-        //         'position':  'absolute',
-        //         'top':       plot.placeholder.position().top + 'px',
-        //         'display':   'none',
-        //         'z-index':   1,
-        //         'font-size': '11px',
-        //         'color':     'black'
-        //     });
-        //     this.$el.append(plot.value);
-        // }, this);
+    drawGraphs() {
+        const { plots } = this.state
 
-        // /*
-        //  * Now prepare to handle hover events on the charts.
-        //  */
-        // var self = this;
-        // this.$el.find('.charts-graphs').on('plothover', function(ev, pos) {
-        //     /* figure out where to position the sliding marker */
-        //     var xvalue = Math.round(pos.x/10);
-        //     var left = _(self.plots).last().plot.pointOffset(pos).left;
-        //     var height = self.$el.find('.charts-graphs').height() - 15;
-        //     /* position the marker and turn it on */
-        //     self.$el.find('.charts-marker').css({
-        //         'top':    0,
-        //         'left':   left,
-        //         'width':  '1px',
-        //         'height': height
-        //     }).show();
-        //     //go through each chart and show it's value at the cursor 
-        //     _(self.plots).each(function(plot){
-        //         if ((xvalue >= 0) && (xvalue < plot.data.length)) {
-        //             $(plot.value).text(plot.format(plot.data[xvalue][1])).css('left', (left+4)+'px').show();
-        //         }
-        //     });
-        // // turn off the marker and values when the mouse leaves 
-        // }).on('mouseout', function(ev) {
-        //     if (ev.relatedTarget.className !== 'charts-marker') {
-        //         self.$el.find('.charts-marker').hide();
-        //         _(self.plots).each(function(plot) { plot.value.hide(); });
-        //     }
-        // });
-        // // also turn off things if the mouse leaves from the marker itself
-        // self.$el.find('.charts-marker').on('mouseout', function(ev) {
-        //     self.$el.find('.charts-marker').hide();
-        //     _(self.plots).each(function(plot) { plot.value.hide(); });
-        // });
+        //-- draw graphs
+        plots.forEach((plot) => {
+            plot.plot = jQuery.plot(plot.placeholder, [plot.data], plot.options)
+        })
+
+        //-- show/hide marker & its values on mouseover/mouseout
+        let self = this
+        let chartGraphs = this.chartGraphs
+        let chartMarker = this.chartMarker
+        const markerHeight = $(chartGraphs).height() - 15
+        $(chartGraphs).on('plothover', function(ev, pos) {
+            let xvalue = Math.round(pos.x/10)
+            let left = _(plots).last().plot.pointOffset(pos).left
+            // console.log("xvalue:" + xvalue + ", left:" + left)
+            // if (left && (left>=0))
+            self.setState({hover: true, markerStyle: {top: '0px', left: left + 'px', width: '1px', height: markerHeight + 'px'}}) //--> trigger rendering
+            $(chartMarker).show()
+            //-- show value for each graph
+            plots.forEach((plot) => {
+                if (xvalue && (xvalue >= 0) && (xvalue < plot.data.length)) {
+                    // if (left && (left>=0))
+                    plot.valueStyle.left = (left+4)+'px'
+                    $(plot.valueHolder).text(plot.format(plot.data[xvalue][1])).show()
+                }
+            })
+        }).on('mouseout', function(ev) {
+            if (ev.relatedTarget && (ev.relatedTarget.className !== 'charts-marker')) {
+                self.setState({hover: false})   //--> trigger rendering
+                $(chartMarker).hide()
+                plots.forEach((plot) => {
+                    $(plot.valueHolder).hide()
+                })
+            }
+        })
+        $(chartMarker).on('mouseout', function(ev) {
+            $(chartMarker).hide()
+            plots.forEach((plot) => {
+                $(plot.valueHolder).hide()
+            })
+        })
     }
 
 	render() {
-		const { dist, time, timeTicks, pace, heartrate, elevation, paceLegend, heartrateLegend, elevationLegend } = this.state
+		const { plots, dist, time, timeTicks, pace, heartrate, elevation, paceLegend, heartrateLegend, elevationLegend, markerStyle } = this.state
+        // console.log("DV:" + defaultValueStyle)
 		return (
-			<div className="charts-wrapper">
-				<div className="charts-marker">
+			<div id="charts" className="charts-wrapper" ref={(ref) => { this.chartWrapper = ref; }}>
+				<div className="charts-marker" style={markerStyle} ref={(ref) => { this.chartMarker = ref; }}>
                 </div>
-		        <div className="charts-graphs" ref={(ref) => { this.chartDiv = ref; }}>
-		        	<figure ref={(ref) => { this.chartPace = ref; }}>
-		        	</figure>
-		        	<figure ref={(ref) => { this.chartHeartrate = ref; }}>
-		        	</figure>
-		        	<figure ref={(ref) => { this.chartElevation = ref; }}>
-		        	</figure>
+		        <div className="charts-graphs" ref={(ref) => { this.chartGraphs = ref; }}>
+                    <figure 
+                        ref={(ref) => { this.chartPace = ref; }}>
+                    </figure>
+                    <figure 
+                        ref={(ref) => { this.chartHeartrate = ref; }}>
+                    </figure>
+                    <figure 
+                        ref={(ref) => { this.chartElevation = ref; }}>
+                    </figure>
                     <div 
                         className="x-axis" 
                         ref={(ref) => { this.chartTick = ref; }}>
                     </div>
 		        </div>
 		        <div className="charts-legend" ref={(ref) => { this.chartLegend = ref; }}>
-		        	<div>
+		        	<div style={ (pace.length>0) ? { display: 'block' } : {display: 'none'}}>
 		        		<p><strong>Pace</strong></p>
 		        		<p>Slowest: {paceLegend.max} per Mile</p>
 		        		<p>Average: {paceLegend.mean} per Mile</p>
 		        		<p>Fastest: {paceLegend.min} per Mile</p>
 		        	</div>
-                    <div>
+                    <div style={ (heartrate.length>0) ? { display: 'block' } : {display: 'none'}}>
                         <p><strong>Heart Rate</strong></p>
                         <p>Minimum: {heartrateLegend.min} bpm</p>
                         <p>Average: {heartrateLegend.mean} bpm</p>
                         <p>Maximum: {heartrateLegend.max} bpm</p>
                     </div>
-                    <div>
+                    <div style={ (elevation.length>0) ? { display: 'block' } : {display: 'none'}}>
                         <p><strong>Elevation</strong></p>
                         <p>Minimum: {elevationLegend.min} ft</p>
                         <p>Average: {elevationLegend.mean} ft</p>
                         <p>Maximum: {elevationLegend.max} ft</p>
                     </div>
 		        </div>
+                <div 
+                    style={(plots && plots[0])? plots[0].valueStyle : {position: 'absolute', left: '0px', top: '0px', zIndex: 1}}
+                    ref={(ref) => { this.paceValue = ref; }}></div>
+                <div 
+                    style={(plots && plots[1])? plots[1].valueStyle : {position: 'absolute', left: '0px', top: '100px', zIndex: 1}}
+                    ref={(ref) => { this.heartrateValue = ref; }}></div>
+                <div 
+                    style={(plots && plots[2])? plots[2].valueStyle : {position: 'absolute', left: '0px', top: '200px', zIndex: 1}}
+                    ref={(ref) => { this.elevationValue = ref; }}></div>
+                <div 
+                    style={(plots && plots[3])? plots[3].valueStyle : {position: 'absolute', left: '0px', top: '300px', zIndex: 1}}
+                    ref={(ref) => { this.tickValue = ref; }}>
+                </div>
 			</div>
 		)
 	}
 }
+
+/*
+                <div 
+                    style={(plots && plots[3])? plots[3].valueStyle : {position: 'absolute', left: '0px', top: '300px', zIndex: 1}}
+                    ref={(ref) => { this.tickValue = ref; }}>
+                </div>
+*/
 
 DetailCharts.propTypes = {
 	model: React.PropTypes.object.isRequired

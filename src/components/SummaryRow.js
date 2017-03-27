@@ -1,5 +1,6 @@
 import React from 'react'
 import moment from 'moment'
+import '../stylesheets/summary.scss'
 
 
 export const SummaryRow = ({run, callBack}) => {

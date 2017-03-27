@@ -1,0 +1,16 @@
+[
+  {
+    "path": "/",
+    "page": "./summary",
+    "chunk": "index"
+  },
+  {
+    "path": "/error",
+    "page": "./error",
+    "chunk": "index"
+  },
+  {
+    "path": "/runs/:id",
+    "page": "./details"
+  }
+]
