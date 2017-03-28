@@ -3,7 +3,6 @@ import React, { Component } from 'react'
 import DetailProperties from './DetailProperties'
 import DetailCharts from './DetailCharts'
 import DetailMap from './DetailMap'
-import history from '../history'
 import '../stylesheets/details.scss'
 
 
@@ -11,7 +10,7 @@ class DetailsView extends Component {
 
 	constructor(props) {
 	    super(props)
-	    history.push('/runs/' + this.props.id)
+	    // history.push('/runs/' + this.props.id)
 	}
 
 	componentWillUnmount() {
