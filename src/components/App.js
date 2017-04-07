@@ -70,6 +70,7 @@ class App extends Component {
 
   showSummaryView() {
     console.log("INFO App :: showSummaryView")
+    console.log("INFO App :: showSummaryView, browserHistory is " + browserHistory)
     browserHistory.push('/#/')
     this.setState({showDetail:false})
   }

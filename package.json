@@ -1,7 +1,7 @@
 {
   "name": "nikeRunningReact",
   "version": "1.0.0",
-  "description": "A sample DataViz project with Nike+ data, built in React",
+  "description": "A sample DataViz project with Nike+ data, built with React",
   "main": "index.js",
   "repository": {
     "type": "git",
