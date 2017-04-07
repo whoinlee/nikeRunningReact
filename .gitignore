@@ -7,10 +7,9 @@ _save
 node_modules
 
 # testing
-coverage
 
 # production
-build
+dist
 
 # misc
 .DS_Store
@@ -20,4 +19,3 @@ yarn-debug.log*
 yarn-error.log*
 .tmp
 .log
-src/**/*.css
