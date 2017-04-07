@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
+import { browserHistory } from 'react-router'
 import fetch from 'isomorphic-fetch'
 import _ from 'underscore'
-
-import { browserHistory } from 'react-router'
 
 import SummaryView from './SummaryView'
 import DetailsView from './DetailsView'
@@ -81,7 +80,7 @@ class App extends Component {
       return (
         <div className="App">
           <div className="App-header">
-            <h2>A Sample Data Visualization w. Nike+ API data built in React</h2>
+            <h2>A Sample Data Visualization w. Nike+ API data, built with React</h2>
           </div>
           { (showError)?
             <Whoops404 /> :

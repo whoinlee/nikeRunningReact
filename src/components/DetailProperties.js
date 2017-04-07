@@ -97,16 +97,7 @@ class DetailProperties extends Component {
 		)
 	}
 }
-/*
-<dl>
-	{propsArr.map((prop) => {
-		return [
-			<dt>{prop[0]} : </dt>,
-			<dd>{prop[1]}</dd>
-		]
-	})}
-</dl>
-*/
+
 
 DetailProperties.propTypes = {
 	model: React.PropTypes.object.isRequired

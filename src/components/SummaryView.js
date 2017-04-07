@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-// import history from '../history'
 import SummaryRow from './SummaryRow'
 import '../stylesheets/summary.scss'
 
@@ -13,10 +12,6 @@ class SummaryView extends Component {
 	      	hide:false
 	    }
 	    this.hideSummaryView = this.hideSummaryView.bind(this)
-	    // history.push({
-	    // 	pathname: window.location
-	    // })
-	    // console.log("window.location:" + window.location)
 	}
 
 	hideSummaryView(id) {
@@ -46,6 +41,7 @@ class SummaryView extends Component {
 		)
 	}
 }  
+
 
 SummaryView.propTypes = {
 	runs: (props) => (	(!Array.isArray(props.runs)) ?

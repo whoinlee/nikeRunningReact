@@ -27,16 +27,8 @@ class DetailMap extends Component {
 		if (this.state.run['gps'] && this.state.run['gps'].waypoints) {
 			const waypoints = this.state.run['gps'].waypoints
 			points = waypoints.map((waypoint) => [waypoint.latitude, waypoint.longitude])
-			// console.log('INFO DetailMap :: points.length is ' + points.length)
-			// console.log('INFO DetailMap :: points is ' + points)
 			this.setState({points:points})
 		}
-
-		/*const leafletMap = this.leafletMap.leafletElement;
-    	leafletMap.on('zoomend', () => {
-            const updatedZoomLevel = leafletMap.getZoom();
-            this.setState({ currentZoomLevel: updatedZoomLevel });
-        });*/
 	}
 
 	render() {
@@ -60,6 +52,7 @@ class DetailMap extends Component {
 		)
 	}
 }
+
 
 DetailMap.propTypes = {
 	model: React.PropTypes.object.isRequired

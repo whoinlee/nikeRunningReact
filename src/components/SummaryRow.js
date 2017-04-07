@@ -3,7 +3,7 @@ import moment from 'moment'
 import '../stylesheets/summary.scss'
 
 
-export const SummaryRow = ({run, callBack}) => {
+const SummaryRow = ({run, callBack}) => {
 
 	let time=moment(run['startTime']).calendar(),
 		duration=run['metricSummary'].duration,
@@ -26,6 +26,7 @@ export const SummaryRow = ({run, callBack}) => {
 		</tr>
 	)			
 }
+
 
 SummaryRow.propTypes = {
 	run: React.PropTypes.object.isRequired,

@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
-
-import DetailProperties from './DetailProperties'
-import DetailCharts from './DetailCharts'
 import DetailMap from './DetailMap'
+import DetailCharts from './DetailCharts'
+import DetailProperties from './DetailProperties'
 import '../stylesheets/details.scss'
 
 
@@ -10,11 +9,10 @@ class DetailsView extends Component {
 
 	constructor(props) {
 	    super(props)
-	    // history.push('/runs/' + this.props.id)
 	}
 
 	componentWillUnmount() {
-		// console.log('INFO DetailsView :: componentWillUnmount ever?????')
+		// console.log('INFO DetailsView :: componentWillUnmount')
 		if (this.viewContainer) this.viewContainer = null
 	}
 

@@ -42,23 +42,19 @@ class DetailCharts extends Component {
 
 	calculateMetrics() {
         // console.log('INFO DetailCharts :: calculateMetrics')
-		// console.log('INFO DetailCharts :: defaultValueStyle is ' + defaultValueStyle)  
 		if (this.state.run['metrics']) {
 			//-- an array of objects
 			const metrics = this.state.run['metrics']
-
 
 			//-- dist :: an array of distance values converted to miles
 			let dist = metrics.find((metric) => (metric.metricType.toUpperCase() === 'DISTANCE'))
 			dist = dist && (dist.values).map((value) => (parseFloat(value) * 0.621371))  //convert to miles
 			this.state.dist = dist
 
-
 			//-- time :: an array of time intervals with step 10
 			const interval = parseInt(metrics[0].intervalMetric, 10)			//radix:10, i.e. decimal number
             let time = _.range(0, interval*metrics[0].values.length, interval) 	//array, (start, stop, step)
             this.state.time = time
-
 
             //-- timeTicks :: an array of tick marks on the x-axis w. max 8 marks
             /* calculate tick marks manually to ensure precise alignment and reasonable values,
@@ -73,7 +69,6 @@ class DetailCharts extends Component {
                 [t, Math.floor(t/3600) + ':' + ((t%3600)/60 + '').padStart(2, '0') + ':00']))
             this.state.timeTicks = timeTicks
             
-
             //-- pace :: an array of pace calculated w. time and distance
             let pace = dist && dist.map((pt, idx) => (
                     ((idx === 0) || (dist[idx] === dist[idx-1])) ?
@@ -83,7 +78,6 @@ class DetailCharts extends Component {
             pace = pace && pace.map((pt) => ( ((pt > 4) && (pt < 20)) ? pt : null ))	//eliminate any outliers
             if (pace) this.state.pace = pace
 
-
             //-- heartrate :: an array of heartrate   
             /* Heart rate may be available, but it's not guaranteed.
              * It's also subject to dropouts where there is no value recorded. We'll filter those out of our data.*/
@@ -91,7 +85,7 @@ class DetailCharts extends Component {
             heartrate = heartrate && (heartrate.values).map((value, idx) => (parseInt(value,10) || null))
             if (heartrate) this.state.heartrate = heartrate
 
-            
+            //-- elevation
             /*Elevation will be available only if there is GPS data. */
             const gps = this.state.run['gps']
             let elevation = gps && gps.waypoints &&
@@ -101,7 +95,6 @@ class DetailCharts extends Component {
                                 .map((pt) => 3.28084*parseFloat(pt))	//convert to feet
                                 .value()
 
-            
             /* At least right now, there's a bit of a bug in Nike's
              * response for GPS data. It claims that the measurements
              * are on the same time scale as the other metrics (every
@@ -259,10 +252,6 @@ class DetailCharts extends Component {
         let plot = {}
         plot.placeholder = this.chartTick
         plot.valueHolder = this.tickValue
-        // let topLoc = 0
-        // if (this.state.pace.length > 0) topLoc += 100
-        // if (this.state.heartrate.length > 0) topLoc += 100
-        // if (this.state.elevation.length > 0) topLoc += 100
         plot.valueStyle = {position: 'absolute', top: '300px', left: '0px', display: 'none', zIndex: 1, fontSize: '11px', color: 'black'}
         plot.data = _(time).map((t) => ([t, null]))
         plot.options = _({}).extend(options, {
@@ -297,14 +286,11 @@ class DetailCharts extends Component {
         $(chartGraphs).on('plothover', function(ev, pos) {
             let xvalue = Math.round(pos.x/10)
             let left = _(plots).last().plot.pointOffset(pos).left
-            // console.log("xvalue:" + xvalue + ", left:" + left)
-            // if (left && (left>=0))
             self.setState({hover: true, markerStyle: {top: '0px', left: left + 'px', width: '1px', height: markerHeight + 'px'}}) //--> trigger rendering
             $(chartMarker).show()
             //-- show value for each graph
             plots.forEach((plot) => {
                 if (xvalue && (xvalue >= 0) && (xvalue < plot.data.length)) {
-                    // if (left && (left>=0))
                     plot.valueStyle.left = (left+4)+'px'
                     $(plot.valueHolder).text(plot.format(plot.data[xvalue][1])).show()
                 }
@@ -328,7 +314,6 @@ class DetailCharts extends Component {
 
 	render() {
 		const { plots, dist, time, timeTicks, pace, heartrate, elevation, paceLegend, heartrateLegend, elevationLegend, markerStyle } = this.state
-        // console.log("DV:" + defaultValueStyle)
 		return (
 			<div id="charts" className="charts-wrapper" ref={(ref) => { this.chartWrapper = ref; }}>
 				<div className="charts-marker" style={markerStyle} ref={(ref) => { this.chartMarker = ref; }}>
@@ -386,12 +371,6 @@ class DetailCharts extends Component {
 	}
 }
 
-/*
-                <div 
-                    style={(plots && plots[3])? plots[3].valueStyle : {position: 'absolute', left: '0px', top: '300px', zIndex: 1}}
-                    ref={(ref) => { this.tickValue = ref; }}>
-                </div>
-*/
 
 DetailCharts.propTypes = {
 	model: React.PropTypes.object.isRequired
