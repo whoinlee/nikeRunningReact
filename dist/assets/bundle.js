@@ -76,7 +76,7 @@
 		_react2.default.createElement(_reactRouter.Route, { path: '/', component: _App2.default }),
 		_react2.default.createElement(
 			_reactRouter.Route,
-			{ path: 'runs', component: _App2.default },
+			{ path: '/runs', component: _App2.default },
 			_react2.default.createElement(_reactRouter.Route, { path: ':id', component: _App2.default })
 		),
 		_react2.default.createElement(_reactRouter.Route, { path: '*', component: _Whoops2.default })
@@ -26607,6 +26607,8 @@
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	// import { browserHistory } from 'react-router'
+
 
 	var App = function (_Component) {
 	  _inherits(App, _Component);
@@ -26640,7 +26642,8 @@
 	      (0, _isomorphicFetch2.default)('./data/runs.json').then(function (response) {
 	        return response.json();
 	      }).then(function (runs) {
-	        console.log("data loaded\nthis.props.location.pathname is " + _this2.props.location.pathname);
+	        console.log("INFO App :: componentDidMount, data loaded");
+	        console.log("INFO App :: componentDidMount, this.props.location.pathname is " + _this2.props.location.pathname);
 	        _this2.setState({ runs: runs, loading: false });
 	        if (_this2.props.location.pathname.startsWith('/runs/')) {
 	          var id = _this2.props.location.pathname.substring(6);
@@ -26667,21 +26670,30 @@
 	    value: function showDetailView(id) {
 	      //TODO change address
 	      console.log("INFO App :: showDetailView, id is " + id);
-
+	      console.log("INFO App :: showDetailView, 1 this.props.location.pathname is " + this.props.location.pathname);
+	      // console.log("INFO App :: showDetailView, browserHistory is " + JSON.stringify(browserHistory))
+	      // console.log("INFO App :: showDetailView, hashHistory is " + JSON.stringify(hashHistory))
 	      var run = this.getSelectedObj(id);
 	      if (run === undefined) {
 	        this.setState({ showError: true });
 	      } else {
-	        _reactRouter.browserHistory.push('/#/runs/' + id);
+	        // browserHistory.push('./#/runs/' + id)
+	        _reactRouter.hashHistory.push('/runs/' + id);
 	        this.setState({ showDetail: true, selectedID: id, selectedObj: run });
 	      }
+	      // console.log("INFO App :: showDetailView, 2 this.props.location.pathname is " + this.props.location.pathname)
 	    }
 	  }, {
 	    key: 'showSummaryView',
 	    value: function showSummaryView() {
-	      console.log("INFO App :: showSummaryView");
-	      _reactRouter.browserHistory.push('/#/');
+	      // console.log("INFO App :: showSummaryView")
+	      console.log("INFO App :: showSummaryView, 1 this.props.location.pathname is " + this.props.location.pathname);
+	      // console.log("INFO App :: showSummaryView, browserHistory is " + JSON.stringify(browserHistory))
+	      // console.log("INFO App :: showSummaryView, hashHistory is " + JSON.stringify(hashHistory))
+	      // browserHistory.push('/#/')
+	      _reactRouter.hashHistory.push('/');
 	      this.setState({ showDetail: false });
+	      // console.log("INFO App :: showSummaryView, 2 this.props.location.pathname is " + this.props.location.pathname)
 	    }
 	  }, {
 	    key: 'render',

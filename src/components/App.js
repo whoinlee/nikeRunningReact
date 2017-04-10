@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { browserHistory } from 'react-router'
+// import { browserHistory } from 'react-router'
+import { hashHistory } from 'react-router'
 import fetch from 'isomorphic-fetch'
 import _ from 'underscore'
 
@@ -32,23 +33,22 @@ class App extends Component {
     fetch('./data/runs.json')
     .then(response => response.json())
     .then(runs => {
-      console.log("data loaded\nthis.props.location.pathname is " + this.props.location.pathname)
+      console.log("INFO App :: componentDidMount, data loaded")
+      console.log("INFO App :: componentDidMount, this.props.location.pathname is " + this.props.location.pathname)
       this.setState({runs: runs, loading:false})
-        if ((this.props.location.pathname).startsWith('/runs/')) {
-          let id = (this.props.location.pathname).substring(6)
-          let run = this.getSelectedObj(id)
-          if (run === undefined) {
-            //TODO: change location to '/', or show Whoops404.js
-            this.setState({showError:true})
-            // browserHistory.push('/')
-          } else {
-            this.showDetailView(id)
-          }
-        } else if (this.props.location.pathname !== '/') {
+      if ((this.props.location.pathname).startsWith('/runs/')) {
+        let id = (this.props.location.pathname).substring(6)
+        let run = this.getSelectedObj(id)
+        if (run === undefined) {
+          //-- Whoops404.js
           this.setState({showError:true})
+        } else {
+          this.showDetailView(id)
         }
+      } else if (this.props.location.pathname !== '/') {
+        this.setState({showError:true})
       }
-    )
+    })
   }
 
   getSelectedObj(id) {
@@ -58,21 +58,23 @@ class App extends Component {
   showDetailView(id) {
     //TODO change address
     console.log("INFO App :: showDetailView, id is " + id)
-
+    console.log("INFO App :: showDetailView, 1 this.props.location.pathname is " + this.props.location.pathname)
     let run = this.getSelectedObj(id)
     if (run === undefined) {
       this.setState({showError:true})
     } else {
-      browserHistory.push('/#/runs/' + id)
+      hashHistory.push('/runs/' + id)
       this.setState({showDetail:true, selectedID:id, selectedObj:run})
     }
+    // console.log("INFO App :: showDetailView, 2 this.props.location.pathname is " + this.props.location.pathname)
   }
 
   showSummaryView() {
-    console.log("INFO App :: showSummaryView")
-    console.log("INFO App :: showSummaryView, browserHistory is " + browserHistory)
-    browserHistory.push('/#/')
+    // console.log("INFO App :: showSummaryView")
+    console.log("INFO App :: showSummaryView, 1 this.props.location.pathname is " + this.props.location.pathname)
+    hashHistory.push('/')
     this.setState({showDetail:false})
+    // console.log("INFO App :: showSummaryView, 2 this.props.location.pathname is " + this.props.location.pathname)
   }
 
   render() {
