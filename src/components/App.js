@@ -56,7 +56,6 @@ class App extends Component {
   }
 
   showDetailView(id) {
-    //TODO change address
     console.log("INFO App :: showDetailView, id is " + id)
     console.log("INFO App :: showDetailView, 1 this.props.location.pathname is " + this.props.location.pathname)
     let run = this.getSelectedObj(id)
@@ -66,7 +65,6 @@ class App extends Component {
       hashHistory.push('/runs/' + id)
       this.setState({showDetail:true, selectedID:id, selectedObj:run})
     }
-    // console.log("INFO App :: showDetailView, 2 this.props.location.pathname is " + this.props.location.pathname)
   }
 
   showSummaryView() {
@@ -74,7 +72,6 @@ class App extends Component {
     console.log("INFO App :: showSummaryView, 1 this.props.location.pathname is " + this.props.location.pathname)
     hashHistory.push('/')
     this.setState({showDetail:false})
-    // console.log("INFO App :: showSummaryView, 2 this.props.location.pathname is " + this.props.location.pathname)
   }
 
   render() {

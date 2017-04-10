@@ -57,8 +57,7 @@ class DetailCharts extends Component {
             this.state.time = time
 
             //-- timeTicks :: an array of tick marks on the x-axis w. max 8 marks
-            /* calculate tick marks manually to ensure precise alignment and reasonable values,
-             * rounded to some integer multiple of 5-minute values. */
+            /* rounded to some integer multiple of 5-minute values. */
             const maxTime = Math.max.apply(null, time)
             const tickCount = Math.floor(maxTime/300)	//300sec, i.e. 5min
             const tickScale = Math.ceil(tickCount/8)*5
