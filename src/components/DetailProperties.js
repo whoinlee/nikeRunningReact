@@ -29,6 +29,10 @@ class DetailProperties extends Component {
 	    this.objToProps = this.objToProps.bind(this)
 	}
 
+	componentWillUnmount() {
+		console.log('INFO DetailProperties :: componentWillUnmount')
+	}
+
 	componentDidMount() {
 	    let propsArr = this.objToProps(this.props.model, [])
 	    this.setState({propsArr:propsArr})

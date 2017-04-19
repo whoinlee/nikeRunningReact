@@ -30,6 +30,17 @@ class DetailCharts extends Component {
 	    this.drawGraphs = this.drawGraphs.bind(this)
 	}
 
+    componentWillUnmount() {
+        console.log('INFO DetailCharts :: componentWillUnmount')
+        this.chartLegend = null
+        this.chartTick = null
+        this.chartElevation = null
+        this.chartPace = null
+        this.chartGraphs = null
+        this.chartMarker = null
+        this.chartWrapper = null
+    }
+
 	componentDidMount() {
 		// console.log('INFO DetailCharts :: componentDidMount')
 		this.calculateMetrics()

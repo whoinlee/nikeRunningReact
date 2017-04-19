@@ -19,12 +19,12 @@ class App extends Component {
       loading:false,
       showDetail:false,
       selectedID: null,
-      selectedObj: null,
+      selectedRun: null,
       showError:false
     }
+    this.getSelectedRun = this.getSelectedRun.bind(this)
     this.showDetailView = this.showDetailView.bind(this)
     this.showSummaryView = this.showSummaryView.bind(this)
-    this.getSelectedObj = this.getSelectedObj.bind(this)
   }
 
   componentDidMount() {
@@ -33,12 +33,11 @@ class App extends Component {
     fetch('./data/runs.json')
     .then(response => response.json())
     .then(runs => {
-      console.log("INFO App :: componentDidMount, data loaded")
       console.log("INFO App :: componentDidMount, this.props.location.pathname is " + this.props.location.pathname)
       this.setState({runs: runs, loading:false})
       if ((this.props.location.pathname).startsWith('/runs/')) {
         let id = (this.props.location.pathname).substring(6)
-        let run = this.getSelectedObj(id)
+        let run = this.getSelectedRun(id)
         if (run === undefined) {
           //-- Whoops404.js
           this.setState({showError:true})
@@ -51,31 +50,31 @@ class App extends Component {
     })
   }
 
-  getSelectedObj(id) {
+  getSelectedRun(id) {
     return _.findWhere(this.state.runs, {"activityId": id})
   }
 
   showDetailView(id) {
     console.log("INFO App :: showDetailView, id is " + id)
-    console.log("INFO App :: showDetailView, 1 this.props.location.pathname is " + this.props.location.pathname)
-    let run = this.getSelectedObj(id)
+    // console.log("INFO App :: showDetailView, this.props.location.pathname is " + this.props.location.pathname)
+    let run = this.getSelectedRun(id)
     if (run === undefined) {
       this.setState({showError:true})
     } else {
-      hashHistory.push('/runs/' + id)
-      this.setState({showDetail:true, selectedID:id, selectedObj:run})
+      if (this.props.location.pathname != ('/runs/' + id)) hashHistory.push('/runs/' + id)
+      this.setState({showDetail:true, selectedID:id, selectedRun:run})
     }
   }
 
   showSummaryView() {
-    // console.log("INFO App :: showSummaryView")
-    console.log("INFO App :: showSummaryView, 1 this.props.location.pathname is " + this.props.location.pathname)
-    hashHistory.push('/')
+    console.log("INFO App :: showSummaryView")
+    // console.log("INFO App :: showSummaryView, this.props.location.pathname is " + this.props.location.pathname)
+    if (this.props.location.pathname != '/') hashHistory.push('/')
     this.setState({showDetail:false})
   }
 
   render() {
-      const { runs, loading, showDetail, selectedID, selectedObj, showError } = this.state
+      const { runs, loading, showDetail, selectedID, selectedRun, showError } = this.state
 
       return (
         <div className="App">
@@ -87,7 +86,7 @@ class App extends Component {
             (!loading && (runs.length > 0) && !showDetail) ?
               <SummaryView runs={runs} callBack={this.showDetailView} /> : 
               (showDetail) ?
-                <DetailsView run={selectedObj} id={selectedID} callBack={this.showSummaryView} /> :
+                <DetailsView run={selectedRun} id={selectedID} callBack={this.showSummaryView} /> :
                 <span>...loading</span>}
         </div>
       )
