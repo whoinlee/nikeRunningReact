@@ -1,7 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
-
 import routes from './routes'
 import storeFactory from './store'
 import { fetchRuns } from './actions'

@@ -19,5 +19,3 @@ const mapDispatchToProps = dispatch =>
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(DetailsView)
-// const Container = connect(mapStateToProps, mapDispatchToProps)(DetailsView)	
-// export default withRouter(Container)

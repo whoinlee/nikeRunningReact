@@ -13,13 +13,6 @@ const SummaryView = ({ runs, onSelectRun=f=>f }) => {
 		onSelectRun(run)
 	}
 
-	// render() {
-		// const { runs, hide } = this.state
-		// <div className="summaryView" style={hide ? { display: 'none' } : {}} >
-		// <SummaryRow key={"row" + i} 
-		// 			run={run} 
-		// 			callBack={this.hideSummaryView} 
-		// /> 
   	return (
 	  	<div className="summaryView" >
 			<table>
@@ -42,7 +35,6 @@ const SummaryView = ({ runs, onSelectRun=f=>f }) => {
 			</table>
 		</div>
 	)
-	// }
 }  
 
 SummaryView.propTypes = {

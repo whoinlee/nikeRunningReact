@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import _ from 'underscore'
 import '../../stylesheets/detailCharts.scss'
 
+
 class DetailCharts extends Component {
 
 	constructor(props) {

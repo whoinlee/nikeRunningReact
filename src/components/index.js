@@ -1,5 +1,6 @@
 import '../stylesheets/index.scss'
 
+
 export const App = ({children}) =>
     <div className="app">
     	<div className="appHeader">
@@ -7,6 +8,7 @@ export const App = ({children}) =>
         </div>
         {children}
     </div>
+
 
 export const Whoops404 = ({ location }) =>
     <div>
