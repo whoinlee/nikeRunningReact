@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import _ from 'underscore'
-import '../stylesheets/detailCharts.scss'
+import '../../stylesheets/detailCharts.scss'
 
 class DetailCharts extends Component {
 
@@ -32,6 +32,7 @@ class DetailCharts extends Component {
 
     componentWillUnmount() {
         console.log('INFO DetailCharts :: componentWillUnmount')
+
         this.chartLegend = null
         this.chartTick = null
         this.chartElevation = null
@@ -43,6 +44,7 @@ class DetailCharts extends Component {
 
 	componentDidMount() {
 		// console.log('INFO DetailCharts :: componentDidMount')
+
 		this.calculateMetrics()
 		this.renderPaceChart()
 		this.renderHeartRateChart()
@@ -53,6 +55,7 @@ class DetailCharts extends Component {
 
 	calculateMetrics() {
         // console.log('INFO DetailCharts :: calculateMetrics')
+
 		if (this.state.run['metrics']) {
 			//-- an array of objects
 			const metrics = this.state.run['metrics']
@@ -380,7 +383,6 @@ class DetailCharts extends Component {
 		)
 	}
 }
-
 
 DetailCharts.propTypes = {
 	model: React.PropTypes.object.isRequired

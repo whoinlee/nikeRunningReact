@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import _ from 'underscore'
 import S from 'string'
-import '../stylesheets/detailProperties.scss'
+import '../../stylesheets/detailProperties.scss'
 
 
 const capitalize = (str) => {
@@ -101,7 +101,6 @@ class DetailProperties extends Component {
 		)
 	}
 }
-
 
 DetailProperties.propTypes = {
 	model: React.PropTypes.object.isRequired

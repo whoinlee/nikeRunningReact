@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Map, Polyline, TileLayer } from 'react-leaflet'
-import '../stylesheets/detailMap.scss'
+import '../../stylesheets/detailMap.scss'
 
 
 class DetailMap extends Component {
@@ -18,11 +18,13 @@ class DetailMap extends Component {
 
 	componentWillUnmount() {
 		console.log('INFO DetailMap :: componentWillUnmount')
+
 		this.leafletMap = null
 	}
 
 	componentDidMount() {
-		console.log('INFO DetailMap :: componentDidMount')
+		// console.log('INFO DetailMap :: componentDidMount')
+
 		let points = []
 		if (this.state.run['gps'] && this.state.run['gps'].waypoints) {
 			const waypoints = this.state.run['gps'].waypoints
@@ -52,7 +54,6 @@ class DetailMap extends Component {
 		)
 	}
 }
-
 
 DetailMap.propTypes = {
 	model: React.PropTypes.object.isRequired

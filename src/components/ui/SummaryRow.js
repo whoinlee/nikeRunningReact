@@ -1,9 +1,9 @@
 import React from 'react'
 import moment from 'moment'
-import '../stylesheets/summary.scss'
+import '../../stylesheets/summary.scss'
 
 
-const SummaryRow = ({run, callBack}) => {
+const SummaryRow = ({run, onRowClick}) => {
 
 	let time=moment(run['startTime']).calendar(),
 		duration=run['metricSummary'].duration,
@@ -12,9 +12,10 @@ const SummaryRow = ({run, callBack}) => {
   		id=run['activityId']
 
 	const onRowClicked = (e) => {
-		// console.log("INFO SummaryRow :: onRowClicked, id is " + id)
+		console.log("INFO SummaryRow :: onRowClicked, id is " + id)
+
 		e.preventDefault()
-		callBack(id)
+		onRowClick(id, run)
 	}
 
 	return (
@@ -27,10 +28,9 @@ const SummaryRow = ({run, callBack}) => {
 	)			
 }
 
-
 SummaryRow.propTypes = {
 	run: React.PropTypes.object.isRequired,
-	callBack: React.PropTypes.func.isRequired
+	onRowClick: React.PropTypes.func.isRequired
 }
 
 export default SummaryRow
