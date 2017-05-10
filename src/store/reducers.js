@@ -2,13 +2,13 @@ import C from '../constants'
 import { combineReducers } from 'redux'
 
 
-export const fetching = (state=false, action) => {
+export const isLoaded = (state=false, action) => {
   switch(action.type) {
     case C.FETCH_RUNS :
-      return true
+      return false
 
-    case C.CANCEL_FETCHING :
-      return false  
+    case C.SET_RUNS:
+      return true
 
     default:
       return state
@@ -25,22 +25,21 @@ export const runs = (state=[], action) => {
     }
 }
 
-export const selectedRun = (state={}, action) => {
+export const run = (state=null, action) => {
     switch(action.type) {
       case C.SET_SELECTED_RUN :
         return action.payload
 
       case C.CLEAR_SELECTED_RUN :
-        return {}
+        return null
 
       default:
         return state
     }
 }
 
-
 export default combineReducers({
-  fetching,
+  isLoaded,
   runs,
-  selectedRun
+  run
 })

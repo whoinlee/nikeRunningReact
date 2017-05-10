@@ -4,9 +4,10 @@ import DetailsView from '../views/DetailsView'
 import { clearSelectedRun } from '../../actions'
 
 
-const mapStateToProps = (state) => 
+const mapStateToProps = (state, props) => 
 ({
-  	run: state.selectedRun
+	isLoaded: state.isLoaded,
+  	run: (state.run) ? state.run : state.runs.find(run => (run.activityId === props.params.id))
 })
 
 const mapDispatchToProps = dispatch =>

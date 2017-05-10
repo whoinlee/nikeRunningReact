@@ -6,7 +6,7 @@ import DetailProperties from '../ui/DetailProperties'
 import '../../stylesheets/details.scss'
 
 
-const DetailsView = ({ run, onBackClick=f=>f }) => {
+const DetailsView = ({ isLoaded, run, onBackClick=f=>f }) => {
 
 	const onBackClicked = (e) => {
 		console.log("INFO DetailsView :: onBackClicked")
@@ -18,23 +18,30 @@ const DetailsView = ({ run, onBackClick=f=>f }) => {
 
 	return (
 		<div className="detailsView">
-			<button 
-				className="backButton" 
-				id="topBackButton" 
-				onClick={onBackClicked}>Back</button>
-			<DetailProperties model={run} />
-			<DetailCharts model={run} />
-			<DetailMap model={run} />
-			<button 
-				className="backButton"  
-				id="bottomBackButton" 
-				onClick={onBackClicked}>Back</button>
+			{
+		  		!isLoaded ?
+		  		<span>...loading</span> :
+		  		<div>
+					<button 
+						className="backButton" 
+						id="topBackButton" 
+						onClick={onBackClicked}>Back</button>
+					<DetailProperties model={run} />
+					<DetailCharts model={run} />
+					<DetailMap model={run} />
+					<button 
+						className="backButton"  
+						id="bottomBackButton" 
+						onClick={onBackClicked}>Back</button>
+				</div>
+			}
 		</div>
 	)
 }
 
 DetailsView.propTypes = {
-	run: React.PropTypes.object.isRequired,
+	isLoaded: React.PropTypes.bool.isRequired,
+	run: React.PropTypes.object,
 	onBackClick: React.PropTypes.func.isRequired
 }
 

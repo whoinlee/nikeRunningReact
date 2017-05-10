@@ -22,8 +22,3 @@ export const clearSelectedRun = () =>
 ({
     type: C.CLEAR_SELECTED_RUN
 })
-
-export const cancelFetching = () => 
-({
-    type: C.CANCEL_FETCHING
-})

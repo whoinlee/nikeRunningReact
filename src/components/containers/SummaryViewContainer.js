@@ -5,6 +5,7 @@ import { setSelectedRun } from '../../actions'
 
 const mapStateToProps = (state) => 
 ({
+  isLoaded: state.isLoaded,
   runs: state.runs
 })
 

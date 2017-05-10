@@ -29844,6 +29844,7 @@
 
 	var mapStateToProps = function mapStateToProps(state) {
 		return {
+			isLoaded: state.isLoaded,
 			runs: state.runs
 		};
 	};
@@ -29883,7 +29884,8 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var SummaryView = function SummaryView(_ref) {
-		var runs = _ref.runs,
+		var isLoaded = _ref.isLoaded,
+		    runs = _ref.runs,
 		    _ref$onSelectRun = _ref.onSelectRun,
 		    onSelectRun = _ref$onSelectRun === undefined ? function (f) {
 			return f;
@@ -29891,23 +29893,20 @@
 
 
 		var onSummaryClicked = function onSummaryClicked(id, run) {
-			console.log("INFO SummaryView :: onSummaryClicked, id is " + id);
+			// console.log("INFO SummaryView :: onSummaryClicked, id is " + id)
 
 			_reactRouter.hashHistory.push('/runs/' + id);
 			onSelectRun(run);
 		};
 
-		// render() {
-		// const { runs, hide } = this.state
-		// <div className="summaryView" style={hide ? { display: 'none' } : {}} >
-		// <SummaryRow key={"row" + i} 
-		// 			run={run} 
-		// 			callBack={this.hideSummaryView} 
-		// /> 
 		return _react2.default.createElement(
 			'div',
 			{ className: 'summaryView' },
-			_react2.default.createElement(
+			!isLoaded ? _react2.default.createElement(
+				'span',
+				null,
+				'...loading'
+			) : _react2.default.createElement(
 				'table',
 				null,
 				_react2.default.createElement(
@@ -29950,12 +29949,12 @@
 				)
 			)
 		);
-		// }
 	};
 
 	SummaryView.propTypes = {
+		isLoaded: _react2.default.PropTypes.bool.isRequired,
 		runs: function runs(props) {
-			return !Array.isArray(props.runs) ? new Error("summary data(runs) should be an array") : !props.runs.length ? new Error("summary data(runs) array must contain at least one record") : null;
+			return props.isLoaded && !Array.isArray(props.runs) ? new Error("summary data(runs) should be an array") : props.isLoaded && !props.runs.length ? new Error("summary data(runs) array must contain at least one record") : null;
 		},
 		onSelectRun: _react2.default.PropTypes.func.isRequired
 	};
@@ -45884,7 +45883,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
-	exports.cancelFetching = exports.clearSelectedRun = exports.setSelectedRun = exports.setRuns = exports.fetchRuns = undefined;
+	exports.clearSelectedRun = exports.setSelectedRun = exports.setRuns = exports.fetchRuns = undefined;
 
 	var _constants = __webpack_require__(403);
 
@@ -45918,12 +45917,6 @@
 	    };
 	};
 
-	var cancelFetching = exports.cancelFetching = function cancelFetching() {
-	    return {
-	        type: _constants2.default.CANCEL_FETCHING
-	    };
-	};
-
 /***/ },
 /* 403 */
 /***/ function(module, exports) {
@@ -45937,8 +45930,7 @@
 		FETCH_RUNS: "FETCH_RUNS",
 		SET_RUNS: "SET_RUNS",
 		SET_SELECTED_RUN: "SET_SELECTED_RUN",
-		CLEAR_SELECTED_RUN: "CLEAR_SELECTED_RUN",
-		CANCEL_FETCHING: "CANCEL_FETCHING"
+		CLEAR_SELECTED_RUN: "CLEAR_SELECTED_RUN"
 	};
 
 	exports.default = constants;
@@ -45965,9 +45957,12 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var mapStateToProps = function mapStateToProps(state) {
+	var mapStateToProps = function mapStateToProps(state, props) {
 		return {
-			run: state.selectedRun
+			isLoaded: state.isLoaded,
+			run: state.run ? state.run : state.runs.find(function (run) {
+				return run.activityId === props.params.id;
+			})
 		};
 	};
 
@@ -45980,8 +45975,6 @@
 	};
 
 	exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(_DetailsView2.default);
-	// const Container = connect(mapStateToProps, mapDispatchToProps)(DetailsView)	
-	// export default withRouter(Container)
 
 /***/ },
 /* 405 */
@@ -46016,17 +46009,13 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var DetailsView = function DetailsView(_ref) {
-		var run = _ref.run,
+		var isLoaded = _ref.isLoaded,
+		    run = _ref.run,
 		    _ref$onBackClick = _ref.onBackClick,
 		    onBackClick = _ref$onBackClick === undefined ? function (f) {
 			return f;
 		} : _ref$onBackClick;
 
-
-		// componentWillUnmount() {
-		// 	// console.log('INFO DetailsView :: componentWillUnmount')
-		// 	if (this.viewContainer) this.viewContainer = null
-		// }
 
 		var onBackClicked = function onBackClicked(e) {
 			console.log("INFO DetailsView :: onBackClicked");
@@ -46036,36 +46025,42 @@
 			onBackClick();
 		};
 
-		// render() {
-		// <div className="detailsView" ref={(ref) => { this.viewContainer = ref; }}>
 		return _react2.default.createElement(
 			'div',
 			{ className: 'detailsView' },
-			_react2.default.createElement(
-				'button',
-				{
-					className: 'backButton',
-					id: 'topBackButton',
-					onClick: onBackClicked },
-				'Back'
-			),
-			_react2.default.createElement(_DetailProperties2.default, { model: run }),
-			_react2.default.createElement(_DetailCharts2.default, { model: run }),
-			_react2.default.createElement(_DetailMap2.default, { model: run }),
-			_react2.default.createElement(
-				'button',
-				{
-					className: 'backButton',
-					id: 'bottomBackButton',
-					onClick: onBackClicked },
-				'Back'
+			!isLoaded ? _react2.default.createElement(
+				'span',
+				null,
+				'...loading'
+			) : _react2.default.createElement(
+				'div',
+				null,
+				_react2.default.createElement(
+					'button',
+					{
+						className: 'backButton',
+						id: 'topBackButton',
+						onClick: onBackClicked },
+					'Back'
+				),
+				_react2.default.createElement(_DetailProperties2.default, { model: run }),
+				_react2.default.createElement(_DetailCharts2.default, { model: run }),
+				_react2.default.createElement(_DetailMap2.default, { model: run }),
+				_react2.default.createElement(
+					'button',
+					{
+						className: 'backButton',
+						id: 'bottomBackButton',
+						onClick: onBackClicked },
+					'Back'
+				)
 			)
 		);
-		// }
 	};
 
 	DetailsView.propTypes = {
-		run: _react2.default.PropTypes.object.isRequired,
+		isLoaded: _react2.default.PropTypes.bool.isRequired,
+		run: _react2.default.PropTypes.object,
 		onBackClick: _react2.default.PropTypes.func.isRequired
 	};
 
@@ -71845,7 +71840,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.selectedRun = exports.runs = exports.fetching = undefined;
+	exports.run = exports.runs = exports.isLoaded = undefined;
 
 	var _constants = __webpack_require__(403);
 
@@ -71855,16 +71850,16 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var fetching = exports.fetching = function fetching() {
+	var isLoaded = exports.isLoaded = function isLoaded() {
 	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 	  var action = arguments[1];
 
 	  switch (action.type) {
 	    case _constants2.default.FETCH_RUNS:
-	      return true;
-
-	    case _constants2.default.CANCEL_FETCHING:
 	      return false;
+
+	    case _constants2.default.SET_RUNS:
+	      return true;
 
 	    default:
 	      return state;
@@ -71884,8 +71879,8 @@
 	  }
 	};
 
-	var selectedRun = exports.selectedRun = function selectedRun() {
-	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+	var run = exports.run = function run() {
+	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 	  var action = arguments[1];
 
 	  switch (action.type) {
@@ -71893,7 +71888,7 @@
 	      return action.payload;
 
 	    case _constants2.default.CLEAR_SELECTED_RUN:
-	      return {};
+	      return null;
 
 	    default:
 	      return state;
@@ -71901,9 +71896,9 @@
 	};
 
 	exports.default = (0, _redux.combineReducers)({
-	  fetching: fetching,
+	  isLoaded: isLoaded,
 	  runs: runs,
-	  selectedRun: selectedRun
+	  run: run
 	});
 
 /***/ },
@@ -71922,9 +71917,6 @@
 	    return function (action) {
 
 	      console.log("Action: " + action.type);
-	      // if (action.payload)
-	      // 	console.log(`action.payload: ${ action.payload }`)
-
 	      next(action);
 	    };
 	  };
@@ -71954,33 +71946,21 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	//???? no need ????
-
-
 	var URL = './data/runs.json';
-
-	function fetchData(url, callback) {
-
-	  (0, _isomorphicFetch2.default)(url).then(function (response) {
-	    if (response.status !== 200) {
-	      console.log('Error fetching runs: ' + response.status);
-	    } else {
-	      // console.log("callback:", callback)
-	      response.json().then(callback);
-	    }
-	  }).catch(function (err) {
-	    console.log('Error fetching runs: ' + err);
-	  });
-	}
-
 	var apiMiddleware = function apiMiddleware(_ref) {
 	  var dispatch = _ref.dispatch;
 	  return function (next) {
 	    return function (action) {
 
 	      if (action.type === _constants2.default.FETCH_RUNS) {
-	        fetchData(URL, function (data) {
-	          return dispatch((0, _actions.setRuns)(data));
+	        (0, _isomorphicFetch2.default)(URL).then(function (response) {
+	          return response.json();
+	        }).then(function (runs) {
+
+	          dispatch((0, _actions.setRuns)(runs));
+	        }).catch(function (error) {
+
+	          console.log('Error fetching runs');
 	        });
 	      }
 	      next(action);
@@ -71989,35 +71969,6 @@
 	};
 
 	exports.default = apiMiddleware;
-
-	// const dataPath = './data/'
-
-	// export const fetchtRuns = value => dispatch => {
-	//     console.log("ever? fetchtRuns")
-
-	//     dispatch({
-	//         type: C.FETCH_RUNS
-	//     })
-
-	//     fetch(dataPath + value)
-	//         .then( response => response.json() )
-	//         .then( runs => {
-	//             console.log("ever? runs available at " + dataPath + value)
-	//             dispatch(
-	//                 setRuns(runs)
-	//             ) 
-	//         })
-	//         .catch(error => {
-	//             console.log("ever? error")
-	//             // dispatch(
-	//             //     addError(error.message)
-	//             // )
-
-	//             dispatch({
-	//                 type: C.CANCEL_FETCHING
-	//             })
-	//         })
-	// }
 
 /***/ },
 /* 631 */
