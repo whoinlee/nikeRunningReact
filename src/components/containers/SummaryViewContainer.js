@@ -1,12 +1,14 @@
 import { connect } from 'react-redux'
-import SummaryView from '../views/SummaryView'
+import { withRouter } from 'react-router'
 import { setSelectedRun } from '../../actions'
+import SummaryView from '../views/SummaryView'
 
 
-const mapStateToProps = (state) => 
+const mapStateToProps = (state, ownProps) => 
 ({
   isLoaded: state.isLoaded,
-  runs: state.runs
+  runs: state.runs,
+  router: ownProps.router
 })
 
 const mapDispatchToProps = dispatch => 
@@ -18,4 +20,5 @@ const mapDispatchToProps = dispatch =>
 	}
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(SummaryView)
+const SummaryViewContainer =  connect(mapStateToProps, mapDispatchToProps)(SummaryView)
+export default withRouter(SummaryViewContainer)

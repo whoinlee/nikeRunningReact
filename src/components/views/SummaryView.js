@@ -1,15 +1,13 @@
-import React, { Component } from 'react'
-import { hashHistory } from 'react-router'
+import React from 'react'
+import PropTypes from 'prop-types'
 import SummaryRow from '../ui/SummaryRow'
 import '../../stylesheets/summary.scss'
 
 
-const SummaryView = ({ isLoaded, runs, onSelectRun=f=>f }) => {
+const SummaryView = ({ isLoaded, runs, router, onSelectRun=f=>f }) => {
 
 	const onSummaryClicked = (id, run) => {
-		// console.log("INFO SummaryView :: onSummaryClicked, id is " + id)
-
-		hashHistory.push('/runs/' + id)
+		router.push('/runs/' + id)
 		onSelectRun(run)
 	}
 
@@ -42,13 +40,14 @@ const SummaryView = ({ isLoaded, runs, onSelectRun=f=>f }) => {
 }  
 
 SummaryView.propTypes = {
-	isLoaded: React.PropTypes.bool.isRequired,
+	isLoaded: PropTypes.bool.isRequired,
 	runs: (props) => (props.isLoaded && !Array.isArray(props.runs)) ?
 						new Error("summary data(runs) should be an array") :
 						(props.isLoaded && !props.runs.length) ?
 			            	new Error("summary data(runs) array must contain at least one record") :
 			          		null,
-	onSelectRun: React.PropTypes.func.isRequired
+	onSelectRun: PropTypes.func.isRequired,
+	router: PropTypes.object
 }
 
 export default SummaryView

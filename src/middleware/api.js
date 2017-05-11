@@ -1,5 +1,5 @@
 import C from '../constants'
-import { setRuns, cancelFetching } from '../actions'
+import { setRuns } from '../actions'
 import fetch from 'isomorphic-fetch' 
 
 

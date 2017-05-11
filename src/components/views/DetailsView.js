@@ -1,18 +1,18 @@
-import React, { Component } from 'react'
-import { hashHistory } from 'react-router'
+import React from 'react'
+import PropTypes from 'prop-types'
 import DetailMap from '../ui/DetailMap'
 import DetailCharts from '../ui/DetailCharts'
 import DetailProperties from '../ui/DetailProperties'
 import '../../stylesheets/details.scss'
 
 
-const DetailsView = ({ isLoaded, run, onBackClick=f=>f }) => {
+const DetailsView = ({ isLoaded, run, router, onBackClick=f=>f }) => {
 
 	const onBackClicked = (e) => {
 		console.log("INFO DetailsView :: onBackClicked")
 
 		e.preventDefault()
-		hashHistory.push('/')
+		router.push('/')
 		onBackClick()
 	}
 
@@ -40,9 +40,10 @@ const DetailsView = ({ isLoaded, run, onBackClick=f=>f }) => {
 }
 
 DetailsView.propTypes = {
-	isLoaded: React.PropTypes.bool.isRequired,
-	run: React.PropTypes.object,
-	onBackClick: React.PropTypes.func.isRequired
+	isLoaded: PropTypes.bool.isRequired,
+	run: PropTypes.object,
+	onBackClick: PropTypes.func.isRequired,
+	router: PropTypes.object
 }
 
 export default DetailsView
