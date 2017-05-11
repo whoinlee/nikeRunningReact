@@ -15,7 +15,7 @@ const SummaryView = ({ isLoaded, runs, router, onSelectRun=f=>f }) => {
 	  	<div className="summaryView" >
 	  		{
 	  			!isLoaded ?
-	  			<span>...loading</span> :
+	  			<div id="loading">...loading</div> :
 				<table>
 					<thead>
 						<tr>
@@ -38,7 +38,7 @@ const SummaryView = ({ isLoaded, runs, router, onSelectRun=f=>f }) => {
 		</div>
 	)
 }  
-
+//	
 SummaryView.propTypes = {
 	isLoaded: PropTypes.bool.isRequired,
 	runs: (props) => (props.isLoaded && !Array.isArray(props.runs)) ?

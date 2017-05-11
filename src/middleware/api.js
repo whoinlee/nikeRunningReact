@@ -1,6 +1,5 @@
 import C from '../constants'
 import { setRuns } from '../actions'
-import fetch from 'isomorphic-fetch' 
 
 
 const URL = './data/runs.json'

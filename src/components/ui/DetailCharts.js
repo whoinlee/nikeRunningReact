@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import _ from 'underscore'
 import '../../stylesheets/detailCharts.scss'
 
@@ -386,7 +387,7 @@ class DetailCharts extends Component {
 }
 
 DetailCharts.propTypes = {
-	model: React.PropTypes.object.isRequired
+	model: PropTypes.object.isRequired
 }
 
 export default DetailCharts

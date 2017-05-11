@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { Map, Polyline, TileLayer } from 'react-leaflet'
 import '../../stylesheets/detailMap.scss'
 
@@ -56,7 +57,7 @@ class DetailMap extends Component {
 }
 
 DetailMap.propTypes = {
-	model: React.PropTypes.object.isRequired
+	model: PropTypes.object.isRequired
 }
 
 export default DetailMap

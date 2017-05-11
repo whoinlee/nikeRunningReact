@@ -9,18 +9,16 @@ import '../../stylesheets/details.scss'
 const DetailsView = ({ isLoaded, run, router, onBackClick=f=>f }) => {
 
 	const onBackClicked = (e) => {
-		console.log("INFO DetailsView :: onBackClicked")
-
 		e.preventDefault()
 		router.push('/')
 		onBackClick()
 	}
-
+	
 	return (
 		<div className="detailsView">
 			{
 		  		!isLoaded ?
-		  		<span>...loading</span> :
+		  		<div id="loading">...loading</div> :
 		  		<div>
 					<button 
 						className="backButton" 
@@ -43,6 +41,7 @@ DetailsView.propTypes = {
 	isLoaded: PropTypes.bool.isRequired,
 	run: PropTypes.object,
 	onBackClick: PropTypes.func.isRequired,
+	onRunLoad: PropTypes.func,
 	router: PropTypes.object
 }
 

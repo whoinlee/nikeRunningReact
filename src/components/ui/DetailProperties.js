@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import _ from 'underscore'
 import S from 'string'
 import '../../stylesheets/detailProperties.scss'
@@ -103,7 +104,7 @@ class DetailProperties extends Component {
 }
 
 DetailProperties.propTypes = {
-	model: React.PropTypes.object.isRequired
+	model: PropTypes.object.isRequired
 }
 
 export default DetailProperties

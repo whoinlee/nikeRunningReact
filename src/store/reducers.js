@@ -25,7 +25,7 @@ export const runs = (state=[], action) => {
     }
 }
 
-export const run = (state=null, action) => {
+export const selectedRun = (state=null, action) => {
     switch(action.type) {
       case C.SET_SELECTED_RUN :
         return action.payload
@@ -41,5 +41,5 @@ export const run = (state=null, action) => {
 export default combineReducers({
   isLoaded,
   runs,
-  run
+  selectedRun
 })
