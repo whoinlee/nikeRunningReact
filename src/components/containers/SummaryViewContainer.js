@@ -11,14 +11,5 @@ const mapStateToProps = (state, ownProps) =>
   router: ownProps.router
 })
 
-const mapDispatchToProps = dispatch => 
-({
-	onSelectRun(run) {
-		dispatch(
-			setSelectedRun(run)
-		)
-	}
-})
-
-const SummaryViewContainer =  connect(mapStateToProps, mapDispatchToProps)(SummaryView)
+const SummaryViewContainer =  connect(mapStateToProps, { setSelectedRun })(SummaryView)
 export default withRouter(SummaryViewContainer)

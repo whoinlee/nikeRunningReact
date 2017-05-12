@@ -33,7 +33,7 @@ class DetailCharts extends Component {
 	}
 
     componentWillUnmount() {
-        console.log('INFO DetailCharts :: componentWillUnmount')
+        // console.log('INFO DetailCharts :: componentWillUnmount')
 
         this.chartLegend = null
         this.chartTick = null

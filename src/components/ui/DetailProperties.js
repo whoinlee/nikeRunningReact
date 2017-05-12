@@ -31,7 +31,7 @@ class DetailProperties extends Component {
 	}
 
 	componentWillUnmount() {
-		console.log('INFO DetailProperties :: componentWillUnmount')
+		// console.log('INFO DetailProperties :: componentWillUnmount')
 	}
 
 	componentDidMount() {

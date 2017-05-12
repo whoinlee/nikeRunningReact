@@ -4,11 +4,11 @@ import SummaryRow from '../ui/SummaryRow'
 import '../../stylesheets/summary.scss'
 
 
-const SummaryView = ({ isLoaded, runs, router, onSelectRun=f=>f }) => {
+const SummaryView = ({ isLoaded, runs, router, setSelectedRun}) => {
 
-	const onSummaryClicked = (id, run) => {
+	const onRowClicked = (id, run) => {
 		router.push('/runs/' + id)
-		onSelectRun(run)
+		setSelectedRun(run)
 	}
 
   	return (
@@ -29,7 +29,7 @@ const SummaryView = ({ isLoaded, runs, router, onSelectRun=f=>f }) => {
 						{runs.map((run, i) =>
 							<SummaryRow key={"row" + i}
 										run={run}
-										onRowClick={onSummaryClicked}
+										onRowClick={onRowClicked}
 							/> 
 						)}
 					</tbody>
@@ -46,8 +46,8 @@ SummaryView.propTypes = {
 						(props.isLoaded && !props.runs.length) ?
 			            	new Error("summary data(runs) array must contain at least one record") :
 			          		null,
-	onSelectRun: PropTypes.func.isRequired,
-	router: PropTypes.object
+	setSelectedRun: PropTypes.func.isRequired,
+	router: PropTypes.object.isRequired
 }
 
 export default SummaryView

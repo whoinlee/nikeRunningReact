@@ -12,7 +12,6 @@ const SummaryRow = ({run, onRowClick}) => {
   		id=run['activityId']
 
 	const onRowClicked = (e) => {
-		// console.log("INFO SummaryRow :: onRowClicked, id is " + id)
 		e.preventDefault()
 		onRowClick(id, run)
 	}

@@ -6,12 +6,12 @@ import DetailProperties from '../ui/DetailProperties'
 import '../../stylesheets/details.scss'
 
 
-const DetailsView = ({ isLoaded, run, router, onBackClick=f=>f }) => {
+const DetailsView = ({ isLoaded, run, router, clearSelectedRun }) => {
 
 	const onBackClicked = (e) => {
 		e.preventDefault()
 		router.push('/')
-		onBackClick()
+		clearSelectedRun()
 	}
 	
 	return (
@@ -40,8 +40,7 @@ const DetailsView = ({ isLoaded, run, router, onBackClick=f=>f }) => {
 DetailsView.propTypes = {
 	isLoaded: PropTypes.bool.isRequired,
 	run: PropTypes.object,
-	onBackClick: PropTypes.func.isRequired,
-	onRunLoad: PropTypes.func,
+	clearSelectedRun: PropTypes.func.isRequired,
 	router: PropTypes.object
 }
 

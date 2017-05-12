@@ -18,7 +18,7 @@ class DetailMap extends Component {
 	}
 
 	componentWillUnmount() {
-		console.log('INFO DetailMap :: componentWillUnmount')
+		// console.log('INFO DetailMap :: componentWillUnmount')
 
 		this.leafletMap = null
 	}
